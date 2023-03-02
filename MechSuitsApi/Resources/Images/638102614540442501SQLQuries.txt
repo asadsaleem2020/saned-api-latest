@@ -1,0 +1,115 @@
+--First of all fill data in it because the user table is dependent on this
+-- user table act as a child table as it always requires the role id.
+
+
+Create table Tbl_User_Role(
+	ID UNIQUEIDENTIFIER NOT NULL,
+    RoleName varchar(255) NOT NULL,
+	IsActive BIT NOT NULL,
+	IsDeleted BIT NOT NULL,
+    PRIMARY KEY (ID)
+)
+ALTER table Tbl_User_Role ADD IsActive BIT NOT NULL, IsDeleted BIT NOT NULL
+	
+--It is a child table that requirs the role id for must
+-- If there is no role created you cannot put(insert/edit/delete) a record in this table
+create table Tbl_User(
+	ID UNIQUEIDENTIFIER NOT NULL,
+	FirstName varchar(50),
+	LastName varchar(50),
+	Email varchar(70),
+	Address text,
+	Phone varchar(50)
+	PRIMARY KEY (ID),
+    RoleId UNIQUEIDENTIFIER FOREIGN KEY REFERENCES Tbl_User_Role(ID)
+)
+ALTER table Tbl_User ADD IsActive BIT NOT NULL, IsDeleted BIT NOT NULL
+
+
+------------------------------------------------------------------------------------------------------
+-- Product table is independent
+
+CREATE TABLE Tbl_Product(
+	ID UNIQUEIDENTIFIER PRIMARY KEY NOT NULL,
+	Name VARCHAR(255) NOT NULL,
+	Price DECIMAL NOT NULL,
+	Description TEXT,
+	IsActive BIT NOT NULL,
+	IsDeleted BIT NOT NULL
+)
+
+-- Tbl_Product_Manufacturer table is dependent on Product table
+
+CREATE TABLE Tbl_Product_Manufacturer(
+	ID UNIQUEIDENTIFIER PRIMARY KEY NOT NULL,
+	ProductId UNIQUEIDENTIFIER FOREIGN KEY REFERENCES Tbl_Product(ID),
+	ManufacturerId UNIQUEIDENTIFIER FOREIGN KEY REFERENCES Tbl_User(ID),
+	IsActive BIT NOT NULL,
+	IsDeleted BIT NOT NULL,
+)
+
+
+-- Tbl_Product_Image table is dependent on Product table
+
+CREATE TABLE Tbl_Product_Image(
+	ID UNIQUEIDENTIFIER PRIMARY KEY NOT NULL,
+	ProductId UNIQUEIDENTIFIER FOREIGN KEY REFERENCES Tbl_Product(ID),
+	ProductImagePath TEXT NOT NULL,
+	IsActive BIT NOT NULL,
+	IsDeleted BIT NOT NULL,
+)
+
+
+------------------------------------------------------------------------------------------------------
+
+
+
+-- It is an independent entity
+
+CREATE TABLE Tbl_Category(
+	Id UNIQUEIDENTIFIER Primary key,
+	CategoryName VARCHAR(50) NOT NULL,
+	IsParent BIT NOT NULL,
+	ParentId UNIQUEIDENTIFIER,
+	IsDeleted bit NOT NULL,
+	IsActive bit NOT NULL
+)
+
+
+-- It is dependent on Tbl_Category 
+CREATE TABLE Tbl_Category_Image(
+	Id UNIQUEIDENTIFIER Primary key,
+	ImagePath text NOT NULL,
+	CategoryId UNIQUEIDENTIFIER FOREIGN KEY REFERENCES Tbl_Category(ID),
+	IsDeleted bit NOT NULL,
+	IsActive bit NOT NULL
+)
+
+------------------------------------------------------------------------------------------------------
+
+-- THIS TABLE IS DEPENDENT ON BOTH PRODUCT AND CATEGORY
+CREATE TABLE Tbl_Product_Category(
+	ID UNIQUEIDENTIFIER PRIMARY KEY NOT NULL,
+	ProductId UNIQUEIDENTIFIER FOREIGN KEY REFERENCES Tbl_Product(ID),
+	CategoryId UNIQUEIDENTIFIER FOREIGN KEY REFERENCES Tbl_Category(ID),
+	IsActive BIT NOT NULL,
+	IsDeleted BIT NOT NULL
+)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

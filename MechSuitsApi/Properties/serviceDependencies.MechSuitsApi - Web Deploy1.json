@@ -1,0 +1,20 @@
+{
+  "dependencies": {
+    "apis2": {
+      "apiEndpoint": "https://mechsuitsapimanagement.azure-api.net/",
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.ApiManagement/service/MechSuitsApiManagement/apis/MechSuitsApi",
+      "type": "apis.azure"
+    },
+    "identityapp1": {
+      "type": "identityapp.default",
+      "dynamicId": null
+    },
+    "mssql1": {
+      "secretStore": "AzureAppSettings",
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/rabitaserver/databases/MechRabita",
+      "type": "mssql.azure",
+      "connectionId": "ConnectionStrings:MecERP",
+      "dynamicId": null
+    }
+  }
+}

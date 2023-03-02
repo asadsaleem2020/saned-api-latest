@@ -1,0 +1,75 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+  
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\Images\638066297591102676img.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Resources\Images\638066297591102676img.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="EntityFramework" Version="6.4.4" />
+    <PackageReference Include="ExcelDataReader" Version="3.6.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.9" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="6.0.5" />
+    <PackageReference Include="Microsoft.AspNetCore.Cors" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.13" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.13">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Identity.Web" Version="1.24.1" />
+    <PackageReference Include="Microsoft.Identity.Web.MicrosoftGraph" Version="1.24.1" />
+    <PackageReference Include="Microsoft.Identity.Web.UI" Version="1.16.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.11" />
+    <PackageReference Include="ServiceStack" Version="6.3.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.23.1" />
+    <PackageReference Include="System.Text.Encoding.CodePages" Version="6.0.0" />
+    <PackageReference Include="Wkhtmltopdf.NetCore" Version="3.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Areas\Auth\Data\" />
+    <Folder Include="Areas\Auth\Models\" />
+    <Folder Include="Areas\Auth\Views\" />
+    <Folder Include="Areas\GeneralSetting\Data\" />
+    <Folder Include="Areas\GeneralSetting\Models\" />
+    <Folder Include="Areas\GeneralSetting\Views\" />
+    <Folder Include="Areas\Hr\Data\" />
+    <Folder Include="Areas\Hr\Models\" />
+    <Folder Include="Areas\Hr\Views\" />
+    <Folder Include="Areas\Items\Data\" />
+    <Folder Include="Areas\Items\Views\" />
+    <Folder Include="Areas\Employees\" />
+    <Folder Include="Areas\Purchase\Data\" />
+    <Folder Include="Areas\Purchase\Models\" />
+    <Folder Include="Areas\Purchase\Views\" />
+    <Folder Include="Areas\Sales\Data\" />
+    <Folder Include="Areas\Sales\Models\" />
+    <Folder Include="Areas\Sales\Views\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CoreInfrastructure\CoreInfrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Executer">
+      <HintPath>..\CoreInfrastructure\bin\Debug\netcoreapp3.1\Executer.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+
+</Project>

@@ -1,0 +1,74 @@
+  [HttpGet]
+        [Route("searchfilters/{type}/{condition}")]
+        public async Task<ActionResult<IEnumerable<M_RecruitementOrder>>> Get3(string type, string condition, [FromQuery] CoreInfrastructure.ItemInformation.ItemInformation.PaginationFilter filter)
+        {
+            string title = HttpContext.Request.Query["title"];
+
+           var route = Request.Path.Value + "?title=" + title;
+            Console.WriteLine(condition);
+            Console.WriteLine(type);
+            var validFilter = new CoreInfrastructure.ItemInformation.ItemInformation.PaginationFilter(filter.PageNumber, filter.PageSize);
+           
+            var pagedData = new List<M_RecruitementOrder>();
+            int totalRecords;
+            var query = "";
+            if (type == "agency")
+            {
+                query = "SELECT (Select Name from RCustomer where Code = Client) as Client, " +
+                "(Select Name from Country where Code = Country) as Country, " +
+                "(Select Name from professions where Code = Profession)as Profession, " +
+                "(select Name from Agents where Code = IDNumber) as IDNumber, Company_Code, " +
+                "HijriDate, Date, VisaType, VisaNumber, VisaDate, Religion, Type, Experience, Age, " +
+                "Appearance, MaritalSatus, CustomerTerms, Workplace, Rworkplace, ArrivalStation, Salary, " +
+                "ApplicationStatus, OrderPackage, ArrivalStationID, DelegateID, AgentName, Agentsource, AgencyNumber," +
+                " Agencysource, Agencydate, ContractNo, DateofContract, RecruitmentFee, AdditionsalRecruitementFee, " +
+                "ValueAddedFee, VisaPhoto, BackingContractPhoto, AgencyPhoto, AgentIDPhoto, Notes, SMS, Status, Sort," +
+                " Locked, OrderNumber, ID, WorkerName, PassportNumber, PassportExpiry, ContactNumber, DelegatePhoto FROM " +
+                "RecruitementOrder where ApplicationStatus = '2' and "+condition;
+              
+            }
+            else if (type == "alternate")
+            {
+                query = "SELECT (Select Name from RCustomer where Code = Client) as Client, " +
+                 "(Select Name from Country where Code = Country) as Country, " +
+                 "(Select Name from professions where Code = Profession)as Profession, " +
+                 "(select Name from Agents where Code = IDNumber) as IDNumber, Company_Code, " +
+                 "HijriDate, Date, VisaType, VisaNumber, VisaDate, Religion, Type, Experience, Age, " +
+                 "Appearance, MaritalSatus, CustomerTerms, Workplace, Rworkplace, ArrivalStation, Salary, " +
+                 "ApplicationStatus, OrderPackage, ArrivalStationID, DelegateID, AgentName, Agentsource, AgencyNumber," +
+                 " Agencysource, Agencydate, ContractNo, DateofContract, RecruitmentFee, AdditionsalRecruitementFee, " +
+                 "ValueAddedFee, VisaPhoto, BackingContractPhoto, AgencyPhoto, AgentIDPhoto, Notes, SMS, Status, Sort," +
+                 " Locked, OrderNumber, ID, WorkerName, PassportNumber, PassportExpiry, ContactNumber, DelegatePhoto FROM " +
+                 "RecruitementOrder where ApplicationStatus = '2' and " + condition;
+
+
+            }
+            else
+            {
+                query = "SELECT (Select Name from RCustomer where Code = Client) as Client, " +
+                  "(Select Name from Country where Code = Country) as Country, " +
+                  "(Select Name from professions where Code = Profession)as Profession, " +
+                  "(select Name from Agents where Code = IDNumber) as IDNumber, Company_Code, " +
+                  "HijriDate, Date, VisaType, VisaNumber, VisaDate, Religion, Type, Experience, Age, " +
+                  "Appearance, MaritalSatus, CustomerTerms, Workplace, Rworkplace, ArrivalStation, Salary, " +
+                  "ApplicationStatus, OrderPackage, ArrivalStationID, DelegateID, AgentName, Agentsource, AgencyNumber," +
+                  " Agencysource, Agencydate, ContractNo, DateofContract, RecruitmentFee, AdditionsalRecruitementFee, " +
+                  "ValueAddedFee, VisaPhoto, BackingContractPhoto, AgencyPhoto, AgentIDPhoto, Notes, SMS, Status, Sort," +
+                  " Locked, OrderNumber, ID, WorkerName, PassportNumber, PassportExpiry, ContactNumber, DelegatePhoto FROM " +
+                  "RecruitementOrder where  " + condition;
+
+
+
+            }
+            var m = _context.RecruitementOrder.
+            FromSqlRaw( query);
+
+            pagedData = m.Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
+            .Take(validFilter.PageSize)
+            .ToList();
+            totalRecords = await m.CountAsync();
+                       var pagedReponse = PaginationHelper.CreatePagedReponse<M_RecruitementOrder>(pagedData, validFilter, totalRecords, uriService, route);
+            return Ok(pagedReponse);
+        }
+
+       

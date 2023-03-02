@@ -1,0 +1,21 @@
+{
+  "dependencies": {
+    "apis2": {
+      "apiEndpoint": "https://sanedapimanagement.azure-api.net/",
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.ApiManagement/service/SanedApiManagement/apis/SanedApiManagement",
+      "type": "apis.azure"
+    },
+    "identityapp1": {
+      "type": "identityapp.default",
+      "connectionId": "AzureAD:ClientSecret",
+      "dynamicId": null
+    },
+    "mssql1": {
+      "secretStore": "AzureAppSettings",
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/saneddatabaseserver/databases/SanedDatabase",
+      "type": "mssql.azure",
+      "connectionId": "ConnectionStrings:MecERP",
+      "dynamicId": null
+    }
+  }
+}

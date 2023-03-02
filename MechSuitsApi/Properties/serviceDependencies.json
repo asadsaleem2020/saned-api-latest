@@ -1,0 +1,20 @@
+{
+  "dependencies": {
+    "apis1": {
+      "type": "apis"
+    },
+    "apis2": {
+      "type": "apis"
+    },
+    "identityapp1": {
+      "type": "identityapp",
+      "connectionId": "AzureAD:ClientSecret",
+      "dynamicId": null
+    },
+    "mssql1": {
+      "type": "mssql",
+      "connectionId": "ConnectionStrings:MecERP",
+      "dynamicId": null
+    }
+  }
+}
