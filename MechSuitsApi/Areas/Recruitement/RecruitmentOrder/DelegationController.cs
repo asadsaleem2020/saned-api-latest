@@ -11,11 +11,15 @@ using CoreInfrastructure.Hr.Setup;
 using MechSuitsApi.Interfaces;
 using System.Security.Claims;
 using System.Data.SqlClient;
+using System.Data;
+using Microsoft.AspNetCore.Cors;
 
 namespace MechSuitsApi.Areas.Recruitement.RecruitmentOrder
 {
-    [Route("api/[controller]")]
+    [Route("api/Recruitement[controller]")]
     [ApiController]
+    // [Authorize]
+    [EnableCors("AllowOrigin")]
     public class DelegationController : ControllerBase
     {
         private readonly IUriService uriService;
@@ -42,7 +46,7 @@ namespace MechSuitsApi.Areas.Recruitement.RecruitmentOrder
             var route = Request.Path.Value;
             var validFilter = new CoreInfrastructure.ItemInformation.ItemInformation.PaginationFilter(filter.PageNumber, filter.PageSize);
             var m = _context.RecruitementOrder_delegation.
-         FromSqlRaw($"SELECT * FROM [SanedDatabase].[dbo].[RecruitementOrder_delegation] where [OrderNumber]={orderNumber}");
+         FromSqlRaw($"SELECT * FROM RecruitementOrder_delegation where [OrderNumber]={orderNumber}");
 
             var pagedData = m.Skip((validFilter.PageNumber - 1) * validFilter.PageSize).Take(validFilter.PageSize).ToList();
             var totalRecords = await m.CountAsync();
@@ -118,6 +122,41 @@ namespace MechSuitsApi.Areas.Recruitement.RecruitmentOrder
 
             return NoContent();
         }
+        [HttpPut]
+        [Route("cancellationStatus/update")]
+        public async Task<IActionResult> updateOrderStatus(M_Delegation m)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                //var sql=("update RecruitementOrder_delegation set CancellationStatus='1'");
+                //_context.Database.ExecuteSqlRaw(sql);
+                UpdateAllToOne();
+                M_Delegation obj = new M_Delegation();
+                obj = await _context.RecruitementOrder_delegation.FindAsync(m.Code);
+                if (obj != null)
+                {
+                    obj.CancellationStatus = m.CancellationStatus;
+                    obj.CancellationOn = DateTime.Now.ToString();
+
+                }
+                
+
+                //_context.RecruitementOrder_delegation.Attach(obj).Property(x => x.CancellationStatus).IsModified = true;
+                _context.RecruitementOrder_delegation.Attach(obj);
+                _context.Entry(obj).Property(x => x.CancellationStatus).IsModified = true;
+                _context.Entry(obj).Property(x => x.CancellationOn).IsModified = true;
+                _context.SaveChanges();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return Ok(m);
+        }
 
         // POST: api/Delegation
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
@@ -166,6 +205,23 @@ namespace MechSuitsApi.Areas.Recruitement.RecruitmentOrder
         private bool M_DelegationExists(string id)
         {
             return _context.RecruitementOrder_delegation.Any(e => e.Code == id);
+        }
+        public void UpdateAllToOne()
+        {
+            SqlDataReader sqldr;
+            string strsql;
+            strsql = "update RecruitementOrder_delegation set CancellationStatus='1'";
+            if (con.State == ConnectionState.Closed)
+            {
+                con.Open();
+            }
+            SqlCommand cmd = new SqlCommand(strsql, con);
+            sqldr = cmd.ExecuteReader();
+            sqldr.Close();
+            if (con.State == ConnectionState.Open)
+            {
+                con.Close();
+            }
         }
     }
 }

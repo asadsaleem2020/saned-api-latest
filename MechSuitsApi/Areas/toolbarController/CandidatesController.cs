@@ -127,11 +127,11 @@ namespace MechSuitsApi.Areas.toolbarController
 
         }
         // GET: api/Level2/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<M_Candidates>> Getm(Int64 id)
+        [HttpGet("{Code}")]
+        public async Task<ActionResult<M_Candidates>> Getm(string Code)
         {
 
-            var m = await _context.Candidates.FindAsync(id);
+            var m = await _context.Candidates.FindAsync(Code);
 
             if (m == null)
             {
@@ -140,8 +140,21 @@ namespace MechSuitsApi.Areas.toolbarController
 
             return m;
         }
-        [HttpGet("view/{id}")]
-        public ActionResult<M_Candidates> Getv(Int64 id)
+        //[HttpGet("{id}")]
+        //public async Task<ActionResult<M_Candidates>> Getm(Int64 id)
+        //{
+
+        //    var m = await _context.Candidates.FindAsync(id);
+
+        //    if (m == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    return m;
+        //}
+        [HttpGet("view/{Code}")]
+        public ActionResult<M_Candidates> Getv(string Code)
         {
             var sql = "SELECT ID ,Company_Code,Code,Name,RName, Passport, PlaceofIssue, " +
                 "ReleaseDate,ExpirayDate,  Type, DOB,Experience,Religion, MaritalStatus," +
@@ -149,7 +162,7 @@ namespace MechSuitsApi.Areas.toolbarController
                 " ContactNumber,Relativesname, RelativeContact," +
                 "(Select Name From Country where Code=country) as country, " +
                 "(Select Name From Agents where Code=Agent) as Agent,PassportID,CV, " +
-                "Notes, Status, Sort, Locked  FROM  Candidates where ID=" + id;
+                "Notes, Status, Sort, Locked  FROM  Candidates where Code=" + Code;
             var m = _context.Candidates.FromSqlRaw(sql);
 
             if (m == null)
@@ -172,7 +185,7 @@ namespace MechSuitsApi.Areas.toolbarController
             try
             {
                 M_Candidates obj = new M_Candidates();
-                obj = await _context.Candidates.FindAsync(m.ID);
+                obj = await _context.Candidates.FindAsync(m.Code);
 
                 if (obj != null)
                 {
@@ -220,7 +233,7 @@ namespace MechSuitsApi.Areas.toolbarController
             _context.Candidates.Add(m);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("Getm", new { id = m.ID }, m);
+            return CreatedAtAction("Getm", new { Code = m.Code }, m);
         }
         public string getNext(string Company_Code)
         {
@@ -248,10 +261,10 @@ namespace MechSuitsApi.Areas.toolbarController
             return no;
         }
         // DELETE: api/Level2/5
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<M_Candidates>> Deletem(Int64 id)
+        [HttpDelete("{Code}")]
+        public async Task<ActionResult<M_Candidates>> Deletem(string Code)
         {
-            var m = await _context.Candidates.FindAsync(id);
+            var m = await _context.Candidates.FindAsync(Code);
             if (m == null)
             {
                 return NotFound();

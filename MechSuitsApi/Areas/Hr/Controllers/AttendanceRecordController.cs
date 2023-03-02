@@ -62,7 +62,7 @@ namespace MechSuitsApi.Areas.Hr.Controllers
         {
             var route = Request.Path.Value;
             var validFilter = new CoreInfrastructure.ItemInformation.ItemInformation.PaginationFilter(filter.PageNumber, filter.PageSize);
-            var pagedData = await _context.HrAttendance_Header
+            var pagedData = await _context.HrAttendance_Header.FromSqlRaw("SELECT Code, CompanyCode, (Select Name from HR_EMPLOYEE where Code=EmployeeID) as EmployeeID, AttendanceDate, LastEntryTime, LastExitTime, ShiftID, Notes, Status, Sort, Locked FROM HrAttendance_Header")
                     .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
                     .Take(validFilter.PageSize)
                     .ToListAsync();
@@ -73,7 +73,7 @@ namespace MechSuitsApi.Areas.Hr.Controllers
                     pagedData[i].DetailRows = dbset.GetDetailsrowsforEdit(pagedData[i].Code);
                 }
             }
-            var totalRecords = await _context.HrAttendance_Header.CountAsync();
+            var totalRecords = pagedData.Count();
             var pagedReponse = PaginationHelper.CreatePagedReponse(pagedData, validFilter, totalRecords, uriService, route);
             return Ok(pagedReponse);
         }

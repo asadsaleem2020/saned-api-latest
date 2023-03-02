@@ -14,6 +14,8 @@ using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using MechSuitsApi.Interfaces;
+using CoreInfrastructure.Recruitement.RecruitmentOrder;
+using CoreInfrastructure.Customers;
 
 namespace MechSuitsApi.Areas.toolbarController
 {// [Authorize]
@@ -81,10 +83,10 @@ namespace MechSuitsApi.Areas.toolbarController
 
         }
         
-        [HttpGet("{id}")]
-        public async Task<ActionResult<M_Delegates>> Getm(Int64 id)
+        [HttpGet("{Code}")]
+        public async Task<ActionResult<M_Delegates>> Getm(string Code)
         {
-            var m = await _context.Delegates.FindAsync(id);
+            var m = await _context.Delegates.FindAsync(Code);
 
             if (m == null)
             {
@@ -92,6 +94,15 @@ namespace MechSuitsApi.Areas.toolbarController
             }
 
             return m;
+        }
+
+        [HttpGet("delegateCustomer/{Code}")]
+        public async Task<ActionResult<IEnumerable<M_RCustomer>>> GetDelegateCustomer(string Code)
+        {
+            var sql = "SELECT ID,Company_Code,Code,Name,RName,AccountCode,ID_Number,mobile,mobile2,CITY,RCITY,STATUS,STREET,RSTREET,Neighborhood,District,EMAIL,DOB,Category,FamilyMemebers,ChildUnderFiveYEars,LivingType,Rooms,Photo_ID,OtherDocument,Source,Office_Know_how,Locked,Sort,ADDRESS,AgentCode,MARITAL_STATUS,(Select Name From Delegates where Code=DelegateID) as DelegateID FROM RCustomer Where DelegateID = " + Code;
+            var m = _context.RCustomer.FromSqlRaw(sql);
+
+            return await m.ToListAsync();
         }
         [HttpPut]
         [Route("update")]
@@ -105,7 +116,7 @@ namespace MechSuitsApi.Areas.toolbarController
             try
             {
                 M_Delegates obj = new M_Delegates();
-                obj = await _context.Delegates.FindAsync(m.ID);
+                obj = await _context.Delegates.FindAsync(m.Code);
 
                 if (obj != null)
                 {
@@ -137,7 +148,7 @@ namespace MechSuitsApi.Areas.toolbarController
             _context.Delegates.Add(m);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("Getm", new { id = m.ID }, m);
+            return CreatedAtAction("Getm", new { Code = m.Code }, m);
         }
         public string getNext(string Company_Code)
         {
@@ -166,10 +177,10 @@ namespace MechSuitsApi.Areas.toolbarController
             return no;
         }
         // DELETE: api/Level2/5
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<M_Delegates>> Deletem(Int64 id)
+        [HttpDelete("{Code}")]
+        public async Task<ActionResult<M_Delegates>> Deletem(string Code)
         {
-            var m = await _context.Delegates.FindAsync(id);
+            var m = await _context.Delegates.FindAsync(Code);
             if (m == null)
             {
                 return NotFound();

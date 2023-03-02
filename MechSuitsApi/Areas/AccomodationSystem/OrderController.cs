@@ -16,6 +16,7 @@ using MechSuitsApi.Interfaces;
 using CoreInfrastructure.AccomodationSystem;
 using CoreInfrastructure.GeneralSetting.Chat;
 using CoreInfrastructure.Recruitement;
+using CoreInfrastructure.Recruitement.RecruitmentOrder;
 
 namespace MechSuitsApi.Areas.AccomodationSystem
 {
@@ -45,19 +46,9 @@ namespace MechSuitsApi.Areas.AccomodationSystem
 
         // GET: api/Level2
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<M_Order>>> GetList()
+        public async Task<IEnumerable<M_Order>> GetList()
         {
-            // return await _context.Order.Where(m => m.Status == "0").ToListAsync();
-            return _context.Order.FromSqlRaw("SELECT ID,Company_Code, OrderNumber, Date" +
-           ", DateHijri, (Select Name from RCustomer where Code= ClientID) as ClientID" +
-           ", (Select Name from WorkerData where Code= workerID) as workerID       " +
-           ", RequestTypeID, ContractDuration, RentalStartDate" +
-           " , RentalCost, ExperienceAllowed, ProbationaryStart" +
-           " , ProbationaryEnd, TrailDays, CostofDayAfterTrail" +
-           ", SponsorshipFee, ValueAddedFee, Notes, Message" +
-           ", Status, Sort, Locked FROM [Order]").ToList();
-
-
+            return await _context.Order.FromSqlRaw("SELECT ID, Company_Code, OrderNumber, Date, (Select Name from RCustomer where Code= ClientID) as ClientID, (Select Name from WorkerData where Code= WorkerName) as WorkerName, RequestTypeID, ContractDuration, RentalStartDate, RentalCost, ExperienceAllowed, ProbationaryStart, ProbationaryEnd, TrailDays, CostofDayAfterTrail, SponsorshipFee, ValueAddedFee, PaymentStatus, PaidAmount, TotalAmount, OrderStatus, Notes, Message, Status, Sort, Locked FROM [Order]").ToListAsync();
         }
         [HttpGet]
         [Route("chunks")]
@@ -67,22 +58,11 @@ namespace MechSuitsApi.Areas.AccomodationSystem
             var route = Request.Path.Value;
             var validFilter = new CoreInfrastructure.ItemInformation.ItemInformation.PaginationFilter(filter.PageNumber, filter.PageSize);
 
-            var m = _context.Order.FromSqlRaw("SELECT ID,Company_Code, OrderNumber, Date" +
-           ", DateHijri, (Select Name from RCustomer where Code= ClientID) as ClientID" +
-           ", (Select Name from WorkerData where Code= workerID) as workerID       " +
-           ", RequestTypeID, ContractDuration, RentalStartDate" +
-           " , RentalCost, ExperienceAllowed, ProbationaryStart" +
-           " , ProbationaryEnd, TrailDays, CostofDayAfterTrail" +
-           ", SponsorshipFee, ValueAddedFee, Notes, Message" +
-           ", Status, Sort, Locked FROM [Order]").ToList();
-            //(Select Name from RCustomer where Code= ClientCode) as 
+            var m = _context.Order.FromSqlRaw("SELECT ID, Company_Code, OrderNumber, Date, (Select Name from RCustomer where Code= ClientID) as ClientID, (Select Name from WorkerData where Code= WorkerName) as WorkerName, RequestTypeID, ContractDuration, RentalStartDate, RentalCost, ExperienceAllowed, ProbationaryStart, ProbationaryEnd, TrailDays, CostofDayAfterTrail, SponsorshipFee, ValueAddedFee, PaymentStatus, PaidAmount, TotalAmount, OrderStatus, Notes, Message, Status, Sort, Locked FROM [Order]").ToList();
             var pagedData = m
-
-
-
-                    .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
-                    .Take(validFilter.PageSize)
-                    .ToList ();
+                .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
+                .Take(validFilter.PageSize)
+                .ToList ();
             var totalRecords = await _context.Order.CountAsync();
             var pagedReponse = PaginationHelper.CreatePagedReponse<M_Order>(pagedData, validFilter, totalRecords, uriService, route);
             return Ok(pagedReponse);
@@ -100,20 +80,12 @@ namespace MechSuitsApi.Areas.AccomodationSystem
             Console.WriteLine(d);
             int totalRecords;
 
-                var m = _context.Order.FromSqlRaw("SELECT ID,Company_Code, OrderNumber, Date" +
-           ", DateHijri, (Select Name from RCustomer where Code= ClientID) as ClientID" +
-           ", (Select Name from WorkerData where Code= workerID) as workerID       " +
-           ", RequestTypeID, ContractDuration, RentalStartDate" +
-           " , RentalCost, ExperienceAllowed, ProbationaryStart" +
-           " , ProbationaryEnd, TrailDays, CostofDayAfterTrail" +
-           ", SponsorshipFee, ValueAddedFee, Notes, Message" +
-           ", Status, Sort, Locked FROM [Order] where RequestTypeID = "+d);
+                var m = _context.Order.FromSqlRaw("SELECT ID, Company_Code, OrderNumber, Date, (Select Name from RCustomer where Code= ClientID) as ClientID, (Select Name from WorkerData where Code= WorkerName) as WorkerName, RequestTypeID, ContractDuration, RentalStartDate, RentalCost, ExperienceAllowed, ProbationaryStart, ProbationaryEnd, TrailDays, CostofDayAfterTrail, SponsorshipFee, ValueAddedFee, PaymentStatus, PaidAmount, TotalAmount, OrderStatus, Notes, Message, Status, Sort, Locked FROM [Order] where RequestTypeID = " + d);
 
                var pagedData = m.Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
                 .Take(validFilter.PageSize)
                 .ToList();
                 totalRecords = await m.CountAsync();
-            //totalRecords = await _context.Order.Where(m => (m.Date < d)).CountAsync();
 
             var pagedReponse = PaginationHelper.CreatePagedReponse<M_Order>(pagedData, validFilter, totalRecords, uriService, route);
             return Ok(pagedReponse);
@@ -141,31 +113,29 @@ namespace MechSuitsApi.Areas.AccomodationSystem
 
         }
         // GET: api/Level2/5
-        [HttpGet("{id}")]
-        //public async Task<ActionResult<M_Order>> Getm(Int64 id)
+        [HttpGet("{OrderNumber}")]
+        public async Task<ActionResult<M_Order>> Getm(string OrderNumber)
+        {
+            var m = await _context.Order.FindAsync(OrderNumber);
+            if (m == null)
+            {
+                return NotFound();
+            }
+            return m;
+        }
+        //public ActionResult<IEnumerable<M_Order>> Getm(string id)
         //{
-        //    var m = await _context.Order.FindAsync(id);
+        //    var sql = "Select ID, Company_Code, OrderNumber, Date, ClientID, WorkerName, RequestTypeID, ContractDuration, RentalStartDate, RentalCost, ExperienceAllowed, ProbationaryStart, ProbationaryEnd, TrailDays, CostofDayAfterTrail, SponsorshipFee , ValueAddedFee, Notes, Message, Status, Sort, Locked FROM [Order] where ID =" + id;
+
+        //    var m = _context.Order.FromSqlRaw(sql).ToList();
 
         //    if (m == null)
         //    {
-        //        return NotFound();
+        //        // return NotFound();
         //    }
 
         //    return m;
         //}
-        public ActionResult<IEnumerable<M_Order>> Getm(Int64 id)
-        {
-            var sql = "Select ID, Company_Code, OrderNumber, Date, DateHijri, ClientID, workerID, RequestTypeID, ContractDuration, RentalStartDate, RentalCost, ExperienceAllowed, ProbationaryStart, ProbationaryEnd, TrailDays, CostofDayAfterTrail, SponsorshipFee , ValueAddedFee, Notes, Message, Status, Sort, Locked FROM [Order] where ID =" + id;
-
-            var m = _context.Order.FromSqlRaw(sql).ToList();
-
-            if (m == null)
-            {
-                // return NotFound();
-            }
-
-            return m;
-        }
 
         [HttpPut]
         [Route("update")]
@@ -195,9 +165,12 @@ namespace MechSuitsApi.Areas.AccomodationSystem
                     obj.ContractDuration = m.ContractDuration;
                     obj.CostofDayAfterTrail = m.CostofDayAfterTrail;
                     obj.Date = m.Date;
-                    obj.DateHijri = m.DateHijri;
                  //   obj.ID = m.ID;
                     obj.Message = m.Message;
+                    obj.PaidAmount = m.PaidAmount;
+                    obj.TotalAmount = m.TotalAmount;
+                    obj.OrderStatus = m.OrderStatus;
+                    obj.PaymentStatus = m.PaymentStatus;
                     obj.Notes = m.Notes;
                     obj.RentalCost = m.RentalCost;
                     obj.RentalStartDate = m.RentalStartDate;
@@ -205,7 +178,7 @@ namespace MechSuitsApi.Areas.AccomodationSystem
                     obj.SponsorshipFee = m.SponsorshipFee;
                     obj.ExperienceAllowed = m.ExperienceAllowed;
                     obj.TrailDays = m.TrailDays;
-                    obj.workerID = m.workerID;
+                    obj.workerName = m.workerName;
                     obj.Locked = m.Locked;
 
 
@@ -224,19 +197,78 @@ namespace MechSuitsApi.Areas.AccomodationSystem
             }
             return Ok(m);
         }
+        [HttpPut]
+        [Route("orderStatus/update")]
+        public async Task<IActionResult> updateOrderStatus(M_Order m)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                M_Order obj = new M_Order();
+                obj = await _context.Order.FindAsync(m.OrderNumber);
+                if (obj != null)
+                {
+                    obj.OrderStatus = m.OrderStatus;
+
+                }
+                _context.Order.Attach(obj).Property(x => x.OrderStatus).IsModified = true;
+                _context.SaveChanges();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return Ok(m);
+        }
+        [HttpPut]
+        [Route("orderNotes/update")]
+        public async Task<IActionResult> updateOrderNotes(M_Order m)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                M_Order obj = new M_Order();
+                obj = await _context.Order.FindAsync(m.OrderNumber);
+                if (obj != null)
+                {
+                    obj.Notes = m.Notes;
+
+                }
+                _context.Order.Attach(obj).Property(x => x.Notes).IsModified = true;
+                _context.SaveChanges();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return Ok(m);
+        }
         [HttpPost]
         public async Task<ActionResult<M_Order>> create(M_Order m)
         {
-             Console.WriteLine("Hello creating MAX");
             m.OrderNumber = getNext(companycode);
-            Console.WriteLine(m.OrderNumber);
-
             _context.Order.Add(m);
-           
             await _context.SaveChangesAsync();
-             UpdateWorkerStatus(m.workerID);
-            return CreatedAtAction("Getm", new { id = m.OrderNumber }, m);
+            return CreatedAtAction("Getm", new { OrderNumber = m.OrderNumber }, m);
         }
+        //public async Task<ActionResult<M_Order>> create(M_Order m)
+        //{
+        //     Console.WriteLine("Hello creating MAX");
+        //    m.OrderNumber = getNext(companycode);
+        //    Console.WriteLine(m.OrderNumber);
+
+        //    _context.Order.Add(m);
+
+        //    await _context.SaveChangesAsync();
+        //     UpdateWorkerStatus(m.WorkerName);
+        //    return CreatedAtAction("Getm", new { OrderNumber = m.OrderNumber }, m);
+        //}
         public string getNext(string Company_Code)
         {
             SqlDataReader sqldr;
@@ -267,7 +299,7 @@ namespace MechSuitsApi.Areas.AccomodationSystem
             SqlDataReader sqldr;
             string strsql;
             string no = "";
-            strsql = @"update  WorkerData set status='1' where Code="+ workerCode;
+            strsql = @"update WorkerData set status='1' where Code="+ workerCode;
             if (con.State == ConnectionState.Closed)
             {
                 con.Open();
@@ -288,7 +320,7 @@ namespace MechSuitsApi.Areas.AccomodationSystem
         }
         // DELETE: api/Level2/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<M_Order>> Deletem(Int64 id)
+        public async Task<ActionResult<M_Order>> Deletem(string id)
         {
             var m = await _context.Order.FindAsync(id);
             if (m == null)

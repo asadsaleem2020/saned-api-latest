@@ -89,264 +89,574 @@ namespace MechSuitsApi.Classes
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             //modelBuilder.Entity<CoreInfrastructure.Accounts.Transaction.CashJournal.M_Header>().HasBaseType((Type)null);
-
             //modelBuilder.Entity<CoreInfrastructure.Accounts.Transaction.Expense.M_Header>().HasBaseType((Type)null);
-
             //modelBuilder.Entity<CoreInfrastructure.Accounts.Transaction.GeneralJournal.M_Header>().HasBaseType((Type)null);
-
             //modelBuilder.Entity<CoreInfrastructure.Accounts.Transaction.BankJournal.M_Header>().HasBaseType((Type)null);
             modelBuilder.Entity<M_ProductControl>()
-                 .HasKey(o => new
-                 {
-                    o.Code
-                 });
-         modelBuilder.Entity<M_Opening>()
-                    .HasKey(o => new
-                    {
+                    .HasKey(o => new {
+                        o.Code
+                    });
+            modelBuilder.Entity<M_Opening>()
+                    .HasKey(o => new {
+                        o.Company_Code,
+                        o.AccountCode
+                    });
+            modelBuilder.Entity<M_Opening>()
+                    .HasKey(o => new {
                         o.Company_Code,
                         o.AccountCode
                     });
             ////////////////
             modelBuilder.Entity<M_Level2>()
-                .HasKey(o => new { o.Company_Code, o.Level1Code, o.Code });
+                    .HasKey(o => new {
+                        o.Company_Code,
+                        o.Level1Code,
+                        o.Code
+                    });
             modelBuilder.Entity<M_Company>()
-             .HasKey(o => new { o.COMPANY_CODE });
+                    .HasKey(o => new {
+                        o.COMPANY_CODE
+                    });
             modelBuilder.Entity<M_Level3>()
-               .HasKey(o => new { o.Company_Code, o.Level1Code, o.Level2Code, o.Code });
+                    .HasKey(o => new {
+                        o.Company_Code,
+                        o.Level1Code,
+                        o.Level2Code,
+                        o.Code
+                    });
             // items
             modelBuilder.Entity<M_ItemCategory>()
-               .HasKey(o => new { o.COMPANY_CODE, o.Code });
+                    .HasKey(o => new {
+                        o.COMPANY_CODE,
+                        o.Code
+                    });
             modelBuilder.Entity<M_StatusName>()
-              .HasKey(o => new { o.COMPANY_CODE, o.Code });
+                    .HasKey(o => new {
+                        o.COMPANY_CODE,
+                        o.Code
+                    });
             modelBuilder.Entity<M_BarCodeType>()
-              .HasKey(o => new { o.COMPANY_CODE, o.Code });
+                    .HasKey(o => new {
+                        o.COMPANY_CODE,
+                        o.Code
+                    });
             modelBuilder.Entity<M_BusinessLocation>()
-              .HasKey(o => new { o.COMPANY_CODE, o.Code });
+                    .HasKey(o => new {
+                        o.COMPANY_CODE,
+                        o.Code
+                    });
             modelBuilder.Entity<M_CurrentOffer>()
-              .HasKey(o => new { o.COMPANY_CODE, o.Code });
+                    .HasKey(o => new {
+                        o.COMPANY_CODE,
+                        o.Code
+                    });
             modelBuilder.Entity<M_LabelFormate>()
-              .HasKey(o => new { o.COMPANY_CODE, o.Code });
+                    .HasKey(o => new {
+                        o.COMPANY_CODE,
+                        o.Code
+                    });
             modelBuilder.Entity<M_BarcodeGenerate>()
-              .HasKey(o => new { o.COMPANY_CODE, o.Barcode });
-
+                    .HasKey(o => new {
+                        o.COMPANY_CODE,
+                        o.Barcode
+                    });
             modelBuilder.Entity<M_ProductTypeId>()
-              .HasKey(o => new { o.COMPANY_CODE, o.Code });
+                    .HasKey(o => new {
+                        o.COMPANY_CODE,
+                        o.Code
+                    });
             // items
             modelBuilder.Entity<M_ProductDiscount>()
-               .HasKey(o => new { o.COMPANY_CODE, o.Code });
+                    .HasKey(o => new {
+                        o.COMPANY_CODE,
+                        o.Code
+                    });
             modelBuilder.Entity<M_Delegation>()
-               .HasKey(o => new { o.Code });
+                    .HasKey(o => new {
+                        o.Code
+                    });
             modelBuilder.Entity<M_SubCategory>()
-              .HasKey(o => new { o.COMPANY_CODE, o.Level1Code, o.Code });
+                    .HasKey(o => new {
+                        o.COMPANY_CODE,
+                        o.Level1Code,
+                        o.Code
+                    });
             modelBuilder.Entity<M_SubCategoryDetail>()
-             .HasKey(o => new { o.Company_Code, o.Level1Code, o.Level2Code, o.Code });
+                    .HasKey(o => new {
+                        o.Company_Code,
+                        o.Level1Code,
+                        o.Level2Code,
+                        o.Code
+                    });
             modelBuilder.Entity<M_ItemInformation>()
-          .HasKey(o => new { o.COMPANY_CODE, o.ITEM_CODE });
+                    .HasKey(o => new {
+                        o.COMPANY_CODE,
+                        o.ITEM_CODE
+                    });
             modelBuilder.Entity<M_Area>()
-        .HasKey(o => new { o.COMPANY_CODE, o.Code });
-
+                    .HasKey(o => new {
+                        o.COMPANY_CODE,
+                        o.Code
+                    });
             //start rabita
             modelBuilder.Entity<M_VisaRequest>()
-        .HasKey(o => new
-        {
-            o.CODE
-        });
+                    .HasKey(o => new {
+                        o.CODE
+                    });
             // modelBuilder.Entity<M_Agents>()
             //.HasKey(o => new { o.ID }); 
             modelBuilder.Entity<M_LaborPrices>()
-.HasKey(o => new { o.Code });
+                    .HasKey(o => new {
+                        o.Code
+                    });
             modelBuilder.Entity<M_Age>()
-.HasKey(o => new { o.COMPANY_CODE, o.Code });
+                    .HasKey(o => new {
+                        o.COMPANY_CODE,
+                        o.Code
+                    });
             modelBuilder.Entity<M_SystemConfiguration>()
-.HasKey(o => new { o.COMPANY_CODE, o.Code });
+                    .HasKey(o => new {
+                        o.COMPANY_CODE,
+                        o.Code
+                    });
             modelBuilder.Entity<M_Office>()
-.HasKey(o => new { o.COMPANY_CODE, o.Code });
+                    .HasKey(o => new {
+                        o.COMPANY_CODE,
+                        o.Code
+                    });
             modelBuilder.Entity<M_Chat>()
-.HasKey(o => new { o.Company_Code, o.Code });
+                    .HasKey(o => new {
+                        o.Company_Code,
+                        o.Code
+                    });
             modelBuilder.Entity<M_Appearance>()
-.HasKey(o => new { o.COMPANY_CODE, o.Code });
+                    .HasKey(o => new {
+                        o.COMPANY_CODE,
+                        o.Code
+                    });
             modelBuilder.Entity<M_Arrivals>()
-.HasKey(o => new { o.COMPANY_CODE, o.Code });
+                    .HasKey(o => new {
+                        o.COMPANY_CODE,
+                        o.Code
+                    });
             modelBuilder.Entity<M_Experience>()
-.HasKey(o => new { o.COMPANY_CODE, o.Code });
+                    .HasKey(o => new {
+                        o.COMPANY_CODE,
+                        o.Code
+                    });
             modelBuilder.Entity<M_MaritalCondition>()
-.HasKey(o => new { o.COMPANY_CODE, o.Code });
+                    .HasKey(o => new {
+                        o.COMPANY_CODE,
+                        o.Code
+                    });
             modelBuilder.Entity<M_RequestStatus>()
-.HasKey(o => new { o.COMPANY_CODE, o.Code });
+                    .HasKey(o => new {
+                        o.COMPANY_CODE,
+                        o.Code
+                    });
             modelBuilder.Entity<M_Terminals>()
-.HasKey(o => new { o.COMPANY_CODE, o.Code });
+                    .HasKey(o => new {
+                        o.COMPANY_CODE,
+                        o.Code
+                    });
             modelBuilder.Entity<M_Visas>()
-.HasKey(o => new { o.COMPANY_CODE, o.Code });
+                    .HasKey(o => new {
+                        o.COMPANY_CODE,
+                        o.Code
+                    });
             modelBuilder.Entity<M_WorkStatus>()
-.HasKey(o => new { o.COMPANY_CODE, o.Code });
+                    .HasKey(o => new {
+                        o.COMPANY_CODE,
+                        o.Code
+                    });
             modelBuilder.Entity<M_Profession>()
-.HasKey(o => new { o.COMPANY_CODE, o.Code });
-
+                    .HasKey(o => new {
+                        o.COMPANY_CODE,
+                        o.Code
+                    });
             // Recruitement 
-
             //end rabita
             modelBuilder.Entity<M_Color>()
-            .HasKey(o => new { o.COMPANY_CODE, o.Code });
+                    .HasKey(o => new {
+                        o.COMPANY_CODE,
+                        o.Code
+                    });
             modelBuilder.Entity<M_Roles>()
-                     .HasKey(o => new { o.COMPANY_CODE, o.code });
+                    .HasKey(o => new {
+                        o.COMPANY_CODE,
+                        o.code
+                    });
             modelBuilder.Entity<M_Department>()
-    .HasKey(o => new { o.COMPANY_CODE, o.Code });
+                    .HasKey(o => new {
+                        o.COMPANY_CODE,
+                        o.Code
+                    });
             modelBuilder.Entity<M_Country>()
- .HasKey(o => new { o.COMPANY_CODE, o.Code });
+                    .HasKey(o => new {
+                        o.COMPANY_CODE,
+                        o.Code
+                    });
             modelBuilder.Entity<M_City>()
- .HasKey(o => new { o.COMPANY_CODE, o.Code });
+                    .HasKey(o => new {
+                        o.COMPANY_CODE,
+                        o.Code
+                    });
             modelBuilder.Entity<M_Salesman>()
- .HasKey(o => new { o.COMPANY_CODE, o.Code });
+                    .HasKey(o => new {
+                        o.COMPANY_CODE,
+                        o.Code
+                    });
             modelBuilder.Entity<M_MeasuringUnit>()
- .HasKey(o => new { o.COMPANY_CODE, o.Code });
+                    .HasKey(o => new {
+                        o.COMPANY_CODE,
+                        o.Code
+                    });
             modelBuilder.Entity<M_itemOpening>()
-.HasKey(o => new { o.COMPANY_CODE, o.ITEMCODE });
+                    .HasKey(o => new {
+                        o.COMPANY_CODE,
+                        o.ITEMCODE
+                    });
             modelBuilder.Entity<M_SaleHeader>()
-.HasKey(o => new { o.COMPANY_CODE, o.INVOICECODE });
+                    .HasKey(o => new {
+                        o.COMPANY_CODE,
+                        o.INVOICECODE
+                    });
             modelBuilder.Entity<M_SaleDetail>()
-.HasKey(o => new { o.COMPANY_CODE, o.INVOICECODE, o.SEQNO });
-
+                    .HasKey(o => new {
+                        o.COMPANY_CODE,
+                        o.INVOICECODE,
+                        o.SEQNO
+                    });
             modelBuilder.Entity<M_SHOLDHEADER>()
-.HasKey(o => new { o.COMPANY_CODE, o.INVOICECODE });
+                    .HasKey(o => new {
+                        o.COMPANY_CODE,
+                        o.INVOICECODE
+                    });
             modelBuilder.Entity<M_SHOLDDETAIL>()
-.HasKey(o => new { o.COMPANY_CODE, o.INVOICECODE, o.SEQNO });
+                    .HasKey(o => new {
+                        o.COMPANY_CODE,
+                        o.INVOICECODE,
+                        o.SEQNO
+                    });
             modelBuilder.Entity<M_Fiscalyear>()
-               .HasKey(o => new { o.CompanyCode, o.Year });
+                    .HasKey(o => new {
+                        o.CompanyCode,
+                        o.Year
+                    });
             modelBuilder.Entity<M_RecruitementAnnex>()
-.HasKey(o => new { o.Code });
+                    .HasKey(o => new {
+                        o.Code
+                    });
             modelBuilder.Entity<M_OrderHeader>()
-.HasKey(o => new { o.COMPANY_CODE, o.INVOICECODE });
+                    .HasKey(o => new {
+                        o.COMPANY_CODE,
+                        o.INVOICECODE
+                    });
             modelBuilder.Entity<M_OrderDetail>()
-                .HasKey(o => new { o.COMPANY_CODE, o.INVOICECODE, o.SEQNO });
+                    .HasKey(o => new {
+                        o.COMPANY_CODE,
+                        o.INVOICECODE,
+                        o.SEQNO
+                    });
             modelBuilder.Entity<M_POHeader>()
-.HasKey(o => new { o.COMPANY_CODE, o.INVOICECODE });
+                    .HasKey(o => new {
+                        o.COMPANY_CODE,
+                        o.INVOICECODE
+                    });
             modelBuilder.Entity<M_PODetail>()
-                .HasKey(o => new { o.COMPANY_CODE, o.INVOICECODE, o.SEQNO });
+                    .HasKey(o => new {
+                        o.COMPANY_CODE,
+                        o.INVOICECODE,
+                        o.SEQNO
+                    });
             modelBuilder.Entity<M_Users>()
-.HasKey(o => new { o.ID, o.USER_CODE, o.ROLE_CODE });
+                    .HasKey(o => new {
+                        o.ID,
+                        o.USER_CODE,
+                        o.ROLE_CODE
+                    });
             modelBuilder.Entity<M_NewUser>()
-.HasKey(o => new { o.COMPANY_CODE, o.CODE, o.ROLE_CODE });
+                    .HasKey(o => new {
+                        o.COMPANY_CODE,
+                        o.CODE,
+                        o.ROLE_CODE
+                    });
             modelBuilder.Entity<M_PurchaseHeader>()
-.HasKey(o => new { o.COMPANY_CODE, o.INVOICECODE });
+                    .HasKey(o => new {
+                        o.COMPANY_CODE,
+                        o.INVOICECODE
+                    });
             modelBuilder.Entity<M_PurchaseDetail>()
-.HasKey(o => new { o.COMPANY_CODE, o.INVOICECODE, o.SEQNO });
+                    .HasKey(o => new {
+                        o.COMPANY_CODE,
+                        o.INVOICECODE,
+                        o.SEQNO
+                    });
             modelBuilder.Entity<M_SponsorshipTransferRefund>()
-.HasKey(o => new { o.Code });
+                    .HasKey(o => new {
+                        o.Code
+                    });
             modelBuilder.Entity<M_SponsorshipTransferRequest>()
-.HasKey(o => new { o.Code });
+                    .HasKey(o => new {
+                        o.Code
+                    });
             modelBuilder.Entity<M_RecruitementMusanedHeader>()
-.HasKey(o => new { o.CODE });
+                    .HasKey(o => new {
+                        o.CODE
+                    });
             modelBuilder.Entity<M_RecruitementMusanedDetails>()
- .HasKey(o => new { o.CODE, o.SEQNO });
-
-              modelBuilder.Entity<M_HrAttendance_Header>()
-.HasKey(o => new { o.Code });
+                    .HasKey(o => new {
+                        o.CODE,
+                        o.SEQNO
+                    });
+            modelBuilder.Entity<M_HrAttendance_Header>()
+                    .HasKey(o => new {
+                        o.Code
+                    });
             modelBuilder.Entity<M_HrAttendance_Detail>()
- .HasKey(o => new { o.Code,o.SeqNo});
+                    .HasKey(o => new {
+                        o.Code,
+                        o.SeqNo
+                    });
             modelBuilder.Entity<M_StaffImprint>()
-.HasKey(o => new { o.Code });
-
-
+                    .HasKey(o => new {
+                        o.Code
+                    });
             modelBuilder.Entity<M_Rack>()
-.HasKey(o => new { o.Code });
-
+                    .HasKey(o => new {
+                        o.Code
+                    });
             modelBuilder.Entity<M_PRHeader>()
-           .HasKey(o => new { o.COMPANY_CODE, o.INVOICECODE });
+                    .HasKey(o => new {
+                        o.COMPANY_CODE,
+                        o.INVOICECODE
+                    });
             modelBuilder.Entity<M_PRDetail>()
-.HasKey(o => new { o.COMPANY_CODE, o.INVOICECODE, o.SEQNO });
+                    .HasKey(o => new {
+                        o.COMPANY_CODE,
+                        o.INVOICECODE,
+                        o.SEQNO
+                    });
             modelBuilder.Entity<M_SRHeader>()
-         .HasKey(o => new { o.COMPANY_CODE, o.INVOICECODE });
+                    .HasKey(o => new {
+                        o.COMPANY_CODE,
+                        o.INVOICECODE
+                    });
             modelBuilder.Entity<M_SRDetail>()
-.HasKey(o => new { o.COMPANY_CODE, o.INVOICECODE, o.SEQNO });
-
+                    .HasKey(o => new {
+                        o.COMPANY_CODE,
+                        o.INVOICECODE,
+                        o.SEQNO
+                    });
             modelBuilder.Entity<M_ExcelSheet>()
-.HasKey(o => new { o.COMPANY_CODE, o.ITEM_CODE });
+                    .HasKey(o => new {
+                        o.COMPANY_CODE,
+                        o.ITEM_CODE
+                    });
             modelBuilder.Entity<M_StockTransfer>()
-.HasKey(o => new { o.COMPANY_CODE, o.documentno });
+                    .HasKey(o => new {
+                        o.COMPANY_CODE,
+                        o.documentno
+                    });
             modelBuilder.Entity<M_productlabel>()
-.HasKey(o => new { o.COMPANY_CODE, o.documentno });
-
+                    .HasKey(o => new {
+                        o.COMPANY_CODE,
+                        o.documentno
+                    });
             modelBuilder.Entity<M_Promocode>()
-.HasKey(o => new { o.COMPANY_CODE, o.documentno });
+                    .HasKey(o => new {
+                        o.COMPANY_CODE,
+                        o.documentno
+                    });
             modelBuilder.Entity<M_Departments>()
-.HasKey(o => new { o.Code });
-              modelBuilder.Entity<M_HrEmployers>()
-.HasKey(o => new { o.Code });
-
+                    .HasKey(o => new {
+                        o.Code
+                    });
+            modelBuilder.Entity<M_HrEmployers>()
+                    .HasKey(o => new {
+                        o.Code
+                    });
             modelBuilder.Entity<M_HrShiftDetails>()
-.HasKey(o => new { o.Code });        
+                    .HasKey(o => new {
+                        o.Code
+                    });
             modelBuilder.Entity<M_HrShift>()
-.HasKey(o => new { o.Code });
+                    .HasKey(o => new {
+                        o.Code
+                    });
             modelBuilder.Entity<M_HrDocuments>()
-.HasKey(o => new { o.Code });
+                    .HasKey(o => new {
+                        o.Code
+                    });
             modelBuilder.Entity<M_HrSetting>()
-.HasKey(o => new { o.Code });
-            
+                    .HasKey(o => new {
+                        o.Code
+                    });
             modelBuilder.Entity<M_Designation>()
-.HasKey(o => new { o.Code });
+                    .HasKey(o => new {
+                        o.Code
+                    });
             modelBuilder.Entity<M_Sections>()
-.HasKey(o => new { o.Code });
+                    .HasKey(o => new {
+                        o.Code
+                    });
             modelBuilder.Entity<M_Gazette_Holidays>()
-.HasKey(o => new { o.Code });
+                    .HasKey(o => new {
+                        o.Code
+                    });
             modelBuilder.Entity<M_Shiftsetup>()
-.HasKey(o => new { o.Code });
+                    .HasKey(o => new {
+                        o.Code
+                    });
             modelBuilder.Entity<M_EmployeeProfile>()
-.HasKey(o => new { o.Code, });  modelBuilder.Entity<M_HrSalary>()
-.HasKey(o => new { o.Code, });
-            
+                    .HasKey(o => new {
+                        o.Code,
+                    });
+            modelBuilder.Entity<M_HrSalary>()
+                    .HasKey(o => new {
+                        o.Code,
+                    });
             modelBuilder.Entity<M_LeaveApplication>()
-.HasKey(o => new { o.DOCUMENT_NO, });
+                    .HasKey(o => new {
+                        o.DOCUMENT_NO,
+                    });
             modelBuilder.Entity<M_Advance>()
-.HasKey(o => new { o.ID, });
+                    .HasKey(o => new {
+                        o.ID,
+                    });
             modelBuilder.Entity<M_Loan>()
-.HasKey(o => new { o.DOCUMENT_NO, });
+                    .HasKey(o => new {
+                        o.DOCUMENT_NO,
+                    });
             modelBuilder.Entity<M_Refund>()
-.HasKey(o => new { o.DOCUMENT_NO, });
+                    .HasKey(o => new {
+                        o.DOCUMENT_NO,
+                    });
             modelBuilder.Entity<M_Vehicles>()
-.HasKey(o => new { o.CODE, });
+                    .HasKey(o => new {
+                        o.CODE,
+                    });
             modelBuilder.Entity<M_OpeningBalance>()
-.HasKey(o => new { o.PeriodID, });
+                    .HasKey(o => new {
+                        o.PeriodID,
+                    });
             modelBuilder.Entity<M_Positions>()
-.HasKey(o => new { o.Code });
+                    .HasKey(o => new {
+                        o.Code
+                    });
             modelBuilder.Entity<M_AttendanceTable>()
-               .HasKey(o => new { o.COMPANY_CODE, o.ATTENDANCE_DATE, o.EMPLOYEE_CODE });
-
+                    .HasKey(o => new {
+                        o.COMPANY_CODE,
+                        o.ATTENDANCE_DATE,
+                        o.EMPLOYEE_CODE
+                    });
             modelBuilder.Entity<M_ItemCompositionHeader>()
-.HasKey(o => new { o.COMPANY_CODE, o.ITEMCODE });
+                    .HasKey(o => new {
+                        o.COMPANY_CODE,
+                        o.ITEMCODE
+                    });
             modelBuilder.Entity<M_ItemCompositionDetail>()
-.HasKey(o => new { o.COMPANY_CODE, o.ItemCode, o.SEQNO, o.PARENTCODE });
-
+                    .HasKey(o => new {
+                        o.COMPANY_CODE,
+                        o.ItemCode,
+                        o.SEQNO,
+                        o.PARENTCODE
+                    });
             modelBuilder.Entity<M_ModalDetail>()
-.HasKey(o => new { o.Company_Code, o.ROLE_ID, o.MENU_ID, });
-
+                    .HasKey(o => new {
+                        o.Company_Code,
+                        o.ROLE_ID,
+                        o.MENU_ID,
+                    });
             modelBuilder.Entity<M_UsersRoles>()
-.HasKey(o => new { o.COMPANY_CODE, o.ROLE_ID, o.MENU_ID, });
+                    .HasKey(o => new {
+                        o.COMPANY_CODE,
+                        o.ROLE_ID,
+                        o.MENU_ID,
+                    });
             modelBuilder.Entity<CoreInfrastructure.Accounts.Transaction.ShiftClose.M_Header>()
-         .HasKey(o => new { o.COMPANY_CODE, o.VoucherId });
-
+                    .HasKey(o => new {
+                        o.COMPANY_CODE,
+                        o.VoucherId
+                    });
             modelBuilder.Entity<M_RecruitementTransmittalHeader>()
- .HasKey(o => new { o.Code });
+                    .HasKey(o => new {
+                        o.Code
+                    });
             modelBuilder.Entity<M_RecruitementTransmittalDetail>()
- .HasKey(o => new { o.Code });
-
+                    .HasKey(o => new {
+                        o.Code
+                    });
             modelBuilder.Entity<M_Main_Account>()
- .HasKey(o => new { o.Code });
+                    .HasKey(o => new {
+                        o.Code
+                    });
             modelBuilder.Entity<M_ProductTax>()
-.HasKey(o => new { o.Code });
-
-
+                    .HasKey(o => new {
+                        o.Code
+                    });
+            modelBuilder.Entity<M_RecruitementOrder>()
+                    .HasKey(o => new {
+                        o.OrderNumber
+                    });
             modelBuilder.Entity<M_ProductType>()
-.HasKey(o => new { o.Code });
+                    .HasKey(o => new {
+                        o.Code
+                    });
             modelBuilder.Entity<M_ProductTags>()
-.HasKey(o => new { o.Code });
+                    .HasKey(o => new {
+                        o.Code
+                    });
             //modelBuilder.Entity<M_ProductInformation>()
             //.HasKey(o => new { o.COMPANY_CODE, o.ITEM_CODE });
             modelBuilder.Entity<M_CandidateReservation>()
-              .HasKey(o => new
-              {
-                  o.Code
-              });
-
+                    .HasKey(o => new {
+                        o.Code
+                    });
+            modelBuilder.Entity<M_OrderUpdate>()
+                    .HasKey(o => new {
+                        o.Code
+                    });
+            modelBuilder.Entity<M_ClientOrderUpdate>()
+                    .HasKey(o => new {
+                        o.Code
+                    });
+            modelBuilder.Entity<M_OrderDocuments>()
+                    .HasKey(o => new {
+                        o.Code
+                    });
+            modelBuilder.Entity<M_Agent>()
+                    .HasKey(o => new {
+                        o.Code
+                    });
+            modelBuilder.Entity<M_Order>()
+                    .HasKey(o => new {
+                        o.OrderNumber
+                    });
+            modelBuilder.Entity<M_RCustomer>()
+                    .HasKey(o => new {
+                        o.Code
+                    });
+            modelBuilder.Entity<M_Candidates>()
+                    .HasKey(o => new {
+                        o.Code
+                    });
+            modelBuilder.Entity<M_WorkerData>()
+                    .HasKey(o => new {
+                        o.Code
+                    });
+            modelBuilder.Entity<M_Agents>()
+                    .HasKey(o => new {
+                        o.Code
+                    });
+            modelBuilder.Entity<M_AgentCustomer_RequestUpdate>()
+                    .HasKey(o => new {
+                        o.Code
+                    });
+            modelBuilder.Entity<M_Delegates>()
+                    .HasKey(o => new {
+                        o.Code
+                    });
 
         }
         //AS Account Setting
@@ -523,6 +833,11 @@ namespace MechSuitsApi.Classes
         public DbSet<M_Refund> HR_REFUND { get; set; }
         public DbSet<M_Positions> HR_POSITION { get; set; }
         public DbSet<M_AttendanceTable> HR_DAILY_ATTENDENCE_DETAIL { get; set; }
+        public DbSet<M_OrderUpdate> OrderDetails_OrderUpdate { get; set; }
+        public DbSet<M_ClientOrderUpdate> OrderDetails_ClientOrderUpdate { get; set; }
+        public DbSet<M_OrderDocuments> OrderDetails_OrderDocuments { get; set; }
+        public DbSet<M_Agent> RecruitementOrder_Agent { get; set; }
+        public DbSet<M_AgentCustomer_RequestUpdate> AgentCustomer_RequestUpdate { get; set; }
 
 
     }

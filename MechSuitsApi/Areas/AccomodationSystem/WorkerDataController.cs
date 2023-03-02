@@ -102,29 +102,43 @@ namespace MechSuitsApi.Areas.AccomodationSystem
         }
         // GET: api/Level2/5
         // GET: api/VendorType/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<M_WorkerData>> Getm(Int64 id)
+        [HttpGet("{Code}")]
+        public async Task<ActionResult<M_WorkerData>> Getm(string Code)
         {
+            var query = $"SELECT Company_Code, Code, Name, RName, Passport, PlaceofIssue, type, DOB, Experience, Religion, " +
+                $"MaritalStatus, (Select Name from Country where Code = Country) as Country, " +
+                $"(Select Name from professions where Code = Profession) as Profession, Salary, address, Mobile," +
+                $" RelativeName, RelativeContact, DateReceived, (Select Name from Arrivals where Code = arrivalStation) as arrivalStation, " +
+                $"(Select Name from WorkerStatus where Code= WorkStatus) as WorkStatus, ProfilePhoto, " +
+                $"(Select Name from Agents where Code = Proxy) as Proxy, (Select Name from RCustomer where Code = sponsor) as sponsor, " +
+                $"ResidenceNO, ResidenceExpiry, AdditonInfo, Status, Sort, Locked, ID FROM WorkerData WHERE Code={Code}";
 
-            var m = await _context.WorkerData.FindAsync(id);
+            var m = _context.WorkerData.FromSqlRaw(query);
 
             if (m == null)
             {
                 return NotFound();
             }
 
-            return m;
+            return await m.FirstAsync();
         }
+        //[HttpGet("{id}")]
+        //public async Task<ActionResult<M_WorkerData>> Getm(Int64 id)
+        //{
+
+        //    var m = await _context.WorkerData.FindAsync(id);
+
+        //    if (m == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    return m;
+        //}
         [HttpGet("view/{id}")]
         public ActionResult<M_WorkerData> Getv(Int64 id)
         {
-            var sql = "SELECT  Company_Code       ,Code       ,Name      ,RName       ,Passport       ,PlaceofIssue       " +
-          ",type       ,DOB       ,Experience       ,Religion       ,MaritalStatus       ,(Select Name from Country where Code= Country) as   Country       ," +
-          "(Select Name from professions where Code= Profession)as   Profession       ,Salary       ," +
-          "address       ,Mobile       ," + "RelativeName       ,RelativeContact       ," +
-          "DateReceived       ,(Select Name from Arrivals where Code= arrivalStation) as arrivalStation       ,(Select Name from WorkerStatus where Code= WorkStatus) as   WorkStatus       ," + "ProfilePhoto       ," +
-          "(Select Name from Agents where Code = Proxy) as Proxy       ,(Select Name from RCustomer where Code = sponsor) as sponsor       ,ResidenceNO       ,ResidenceExpiry       ,AdditonInfo       ," +
-          "Status       ,Sort       ,Locked       ,ID   FROM   WorkerData where ID=" + id;
+            var sql = $"SELECT Company_Code, Code, Name, RName, Passport, PlaceofIssue, type, DOB, Experience, Religion, MaritalStatus, (Select Name from Country where Code = Country) as Country, (Select Name from professions where Code = Profession) as Profession, Salary, address, Mobile, RelativeName, RelativeContact, DateReceived, (Select Name from Arrivals where Code = arrivalStation) as arrivalStation, (Select Name from WorkerStatus where Code= WorkStatus) as WorkStatus, ProfilePhoto, (Select Name from Agents where Code = Proxy) as Proxy, (Select Name from RCustomer where Code = sponsor) as sponsor, ResidenceNO, ResidenceExpiry, AdditonInfo, Status, Sort, Locked, ID FROM WorkerData WHERE Code={id}";
             var m = _context.WorkerData.FromSqlRaw(sql);
 
             if (m == null)
@@ -148,7 +162,7 @@ namespace MechSuitsApi.Areas.AccomodationSystem
             try
             {
                 M_WorkerData obj = new M_WorkerData();
-                obj = await _context.WorkerData.FindAsync(m.ID);
+                obj = await _context.WorkerData.FindAsync(m.Code);
                 Console.WriteLine("I AM HERE");
                 if (obj != null)
                 {
@@ -207,7 +221,7 @@ namespace MechSuitsApi.Areas.AccomodationSystem
             _context.WorkerData.Add(m);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("Getm", new { id = m.ID }, m);
+            return CreatedAtAction("Getm", new { Code = m.Code }, m);
         }
         public string getNext(string Company_Code)
         {

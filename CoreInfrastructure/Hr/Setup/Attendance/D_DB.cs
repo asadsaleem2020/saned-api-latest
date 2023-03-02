@@ -31,7 +31,7 @@ namespace CoreInfrastructure.Hr.Setup.Attendance
             {
                 con.Open();
             }
-            strsql = "select * from HrAttendance_Detail where  Code= " + CODE;
+            strsql = "SELECT CompanyCode, Code, SeqNo, (Select Name from HR_EMPLOYEE where Code=EmployeeID) as EmployeeID, AttendanceDate, EntryTime, ExitTime, LateTime, ExtraTime, EarlyDismissalTime, Notes, Status, Sort, Locked FROM HrAttendance_Detail where Code= " + CODE;
             if (con.State == ConnectionState.Closed)
             {
                 con.Open();
@@ -51,7 +51,8 @@ namespace CoreInfrastructure.Hr.Setup.Attendance
                     {
                         Code = row["Code"].ToString(),
                         CompanyCode = row["CompanyCode"].ToString(),
-                        EmployeeID = row["CompanyCode"].ToString(),
+                        SeqNo = row["SeqNo"].ToString(),
+                        EmployeeID = row["EmployeeID"].ToString(),
                         AttendanceDate = DateTime.Parse(row["AttendanceDate"].ToString()),
                         EarlyDismissalTime = (TimeSpan?)row["EarlyDismissalTime"],
                         EntryTime = (TimeSpan?)row["EntryTime"],

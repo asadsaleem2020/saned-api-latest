@@ -69,11 +69,11 @@ namespace MechSuitsApi.Areas.Accounts
             var validFilter = new CoreInfrastructure.ItemInformation.ItemInformation.PaginationFilter(filter.PageNumber, filter.PageSize);
             // var response = await _context.Product_Information.ToListAsync();
 
-            var pagedData = await _context.Chart_of_Accounts.Where(m => m.Name.Contains(title))
+            var pagedData = await _context.Chart_of_Accounts.Where(m => m.Name.Contains(title)||m.Code.Contains(title))
                     .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
                     .Take(validFilter.PageSize)
                     .ToListAsync();
-            var totalRecords = await _context.Chart_of_Accounts.Where(m => m.Name.Contains(title)).CountAsync();
+            var totalRecords = await _context.Chart_of_Accounts. Where(m => m.Name.Contains(title) || m.Code.Contains(title)).CountAsync();
             var pagedReponse = PaginationHelper.CreatePagedReponse<M_Chart>(pagedData, validFilter, totalRecords, uriService, route);
             return Ok(pagedReponse);
 

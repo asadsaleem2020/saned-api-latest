@@ -61,7 +61,7 @@ namespace MechSuitsApi.Areas.toolbarController
             var validFilter = new CoreInfrastructure.ItemInformation.ItemInformation.PaginationFilter(filter.PageNumber, filter.PageSize);
 
             var m = _context.LaborPrices.
-          FromSqlRaw("SELECT ID, Company_Code, Code, (Select Name from Agents where ID = Agent) as Agent, " +
+          FromSqlRaw("SELECT ID, Company_Code, Code, (Select Name from Agents where Code = Agent) as Agent, " +
                 "(Select Name from professions where Code = Occupation) as Occupation, Religion, Experience, PriceDollar, " +
                    "PriceRiyal, ContratctPeriod, LeaveInDays, SalaryInRiyal, ArrivalDuration, Notes, Status, " +
                    "Sort, Locked FROM  [LaborPrices] Where Status=0 AND Agent = " + agentid).ToList();
@@ -103,7 +103,7 @@ namespace MechSuitsApi.Areas.toolbarController
         public ActionResult<IEnumerable<M_LaborPrices>> Getm(String agentid)
         {
             Console.WriteLine(agentid);
-            var sql = "SELECT ID, Company_Code, Code, (Select Name from Agents where ID = Agent) as Agent, " +
+            var sql = "SELECT ID, Company_Code, Code, (Select Name from Agents where Code = Agent) as Agent, " +
                 "(Select Name from professions where Code = Occupation) as Occupation, Religion, Experience, PriceDollar, " +
                    "PriceRiyal, ContratctPeriod, LeaveInDays, SalaryInRiyal, ArrivalDuration, Notes, Status, " +
                    "Sort, Locked FROM  [LaborPrices] Where Agent = '"+ agentid + "'"; //ORDER BY CONVERT(DATETIME,SendingTime) DESC
@@ -117,14 +117,14 @@ namespace MechSuitsApi.Areas.toolbarController
             return m;
         }
 
-        [HttpGet("{agentID}/view/{id}")]
-        public ActionResult<IEnumerable<M_LaborPrices>> GetView(string agentID, string id)
+        [HttpGet("{agentID}/view/{Code}")]
+        public ActionResult<IEnumerable<M_LaborPrices>> GetView(string agentID, string Code)
         {
-            if (agentID != null && agentID != "" && id != null && id != "")
+            if (agentID != null && agentID != "" && Code != null && Code != "")
             {
                 var sql = "SELECT ID, Company_Code, Code, Agent,Occupation, Religion, Experience, PriceDollar, " +
                    "PriceRiyal, ContratctPeriod, LeaveInDays, SalaryInRiyal, ArrivalDuration, Notes, Status, " +
-                   "Sort, Locked FROM  [LaborPrices] Where Agent=" + agentID + " AND ID=" + id;
+                   "Sort, Locked FROM  [LaborPrices] Where Agent=" + agentID + " AND Code=" + Code;
 
                 var m = _context.LaborPrices.FromSqlRaw(sql).ToList();
 
@@ -188,6 +188,7 @@ namespace MechSuitsApi.Areas.toolbarController
         {
             Console.WriteLine("Hello creating Record For LaborPrice");
             m.Code = getNext(companycode);
+            m.ID = m.Code;
             Console.WriteLine(m.Code);
 
             _context.LaborPrices.Add(m);
@@ -219,6 +220,18 @@ namespace MechSuitsApi.Areas.toolbarController
             }
             if (no.Trim() == "") no = "1";
             return no;
+        }
+        [HttpDelete("{Code}")]
+        public async Task<ActionResult<M_LaborPrices>> Deletem(string Code)
+        {
+            var m = await _context.LaborPrices.FindAsync(Code);
+            if (m == null)
+            {
+                return NotFound();
+            }
+            _context.LaborPrices.Remove(m);
+            await _context.SaveChangesAsync();
+            return m;
         }
 
 

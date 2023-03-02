@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Authorization;
 using MechSuitsApi.Interfaces;
 using CoreInfrastructure.ToolbarItems;
 using CoreInfrastructure.Customers;
+using CoreInfrastructure.Recruitement.RecruitmentOrder;
 
 namespace MechSuitsApi.Areas.toolbarController
 {
@@ -88,11 +89,11 @@ namespace MechSuitsApi.Areas.toolbarController
 
         }
         // GET: api/Level2/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<M_Agents>> Getm(Int64 id)
+        [HttpGet("{Code}")]
+        public async Task<ActionResult<M_Agents>> Getm(string Code)
         {
 
-            var m = await _context.Agents.FindAsync(id);
+            var m = await _context.Agents.FindAsync(Code);
 
             if (m == null)
             {
@@ -101,12 +102,12 @@ namespace MechSuitsApi.Areas.toolbarController
 
             return m;
         }
-        [HttpGet("view/{id}")]
-        public ActionResult<M_Agents> Getv(Int64 id)
+        [HttpGet("view/{Code}")]
+        public ActionResult<M_Agents> Getv(string Code)
         {
             var sql = "SELECT ID, Company_Code, Code, Name, RName, EMAIL, ID_Number, (Select Name From Country where Code=Country) as Country, Password, Address, " +
                 "RAddress, city, Rcity, License, mobile, Phone, fax, SendingBank, responsibleName, AccountNumber, " +
-                "CellPhone, licenseHolder, Homephone, Notes, Status, Sort, Locked FROM Agents where ID=" + id;
+                "CellPhone, licenseHolder, Homephone, Notes, Status, Sort, Locked FROM Agents where Code=" + Code;
             var m = _context.Agents.FromSqlRaw(sql);
 
             if (m == null)
@@ -115,6 +116,14 @@ namespace MechSuitsApi.Areas.toolbarController
             }
 
             return m.First();
+        }
+         [HttpGet("agentOrders/{Code}")]
+        public async Task<ActionResult<IEnumerable<M_Agent>>> GetAgentOrder(string Code)
+        {
+            var sql = "SELECT CompanyCode, Code, OrderNumber, AgentID, (Select Name From Agents Where Code = AgentID) as AgentName, WorkerID, (Select Name From Candidates Where Code = WorkerID) as WorkerName, WorkerRecruitmentCost, AmountPaid, Notes, AddedOn, AddedBy, ModifiedOn, ModifiedBy, DeletedOn, DeletedBy, Status, IsActive, Sort, Locked FROM RecruitementOrder_Agent Where AgentID = " + Code;
+            var m = _context.RecruitementOrder_Agent.FromSqlRaw(sql);
+
+            return await m.ToListAsync();
         }
 
         [HttpPut]
@@ -131,7 +140,7 @@ namespace MechSuitsApi.Areas.toolbarController
             try
             {
                 M_Agents obj = new M_Agents();
-                obj = await _context.Agents.FindAsync(m.ID);
+                obj = await _context.Agents.FindAsync(m.Code);
 
                 if (obj != null)
                 {
@@ -177,16 +186,15 @@ namespace MechSuitsApi.Areas.toolbarController
             _context.Agents.Add(m);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("Getm", new { id = m.ID }, m);
+            return CreatedAtAction("Getm", new { Code = m.Code }, m);
         }
         public string getNext(string Company_Code)
         { 
             SqlDataReader sqldr;
             string strsql;
             string no = "";
-            strsql = @"SELECT ISNULL(MAX( CAST(CODE AS BIGINT  ))  ,1000) +1  AS code FROM Agents";
-            //strsql = "select  max(  cast(code as bigint)) +1  as code from Agents where    Company_Code='" + Company_Code + "' ";
-
+            strsql = @"SELECT ISNULL( MAX( CAST(CODE AS BIGINT)),1000) +1  AS code FROM Agents";
+            
             if (con.State == ConnectionState.Closed)
             {
                 con.Open();
@@ -206,10 +214,10 @@ namespace MechSuitsApi.Areas.toolbarController
             return no;
         }
         // DELETE: api/Level2/5
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<M_Agents>> Deletem(Int64 id)
+        [HttpDelete("{Code}")]
+        public async Task<ActionResult<M_Agents>> Deletem(string Code)
         {
-            var m = await _context.Agents.FindAsync(id);
+            var m = await _context.Agents.FindAsync(Code);
             if (m == null)
             {
                 return NotFound();

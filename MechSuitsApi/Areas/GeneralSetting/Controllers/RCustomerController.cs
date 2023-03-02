@@ -17,6 +17,8 @@ using MechSuitsApi.Interfaces;
 using CoreInfrastructure.ToolbarItems;
 using System.IO;
 using System.Net.Http.Headers;
+using CoreInfrastructure.AccomodationSystem;
+using CoreInfrastructure.Recruitement.RecruitmentOrder;
 
 namespace MechSuitsApi.Areas.GeneralSetting.Controllers
 {
@@ -87,26 +89,36 @@ namespace MechSuitsApi.Areas.GeneralSetting.Controllers
 
         }
         // GET: api/Level2/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<M_RCustomer>> Getm(Int64 id)
+        [HttpGet("{Code}")]
+        public async Task<ActionResult<M_RCustomer>> Getm(string Code)
         {
-
-            var m = await _context.RCustomer.FindAsync(id);
-
+            var m = await _context.RCustomer.FindAsync(Code);
             if (m == null)
             {
                 return NotFound();
             }
-
             return m;
         }
-        [HttpGet("view/{id}")]
-        public ActionResult<M_RCustomer> Getv(Int64 id)
+        //[HttpGet("{id}")]
+        //public async Task<ActionResult<M_RCustomer>> Getm(Int64 id)
+        //{
+
+        //    var m = await _context.RCustomer.FindAsync(id);
+
+        //    if (m == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    return m;
+        //}
+        [HttpGet("view/{Code}")]
+        public ActionResult<M_RCustomer> Getv(string Code)
         {
             var sql = "SELECT ID,Company_Code,Code,Name,RName,ID_Number,mobile,mobile2,CITY," +
                 "RCITY,STATUS,STREET,RSTREET,Neighborhood,District,EMAIL,DOB,Category,FamilyMemebers," +
                 "ChildUnderFiveYEars,LivingType,Rooms,Photo_ID,OtherDocument,Source,Office_Know_how," +
-                "Locked,Sort,ADDRESS,AgentCode,MARITAL_STATUS,(Select Name From Delegates where Code=DelegateID) as DelegateID FROM RCustomer where ID=" + id;
+                "Locked,Sort,ADDRESS,AgentCode,MARITAL_STATUS,(Select Name From Delegates where Code=DelegateID) as DelegateID FROM RCustomer where Code=" + Code;
             var m = _context.RCustomer.FromSqlRaw(sql);
 
             if (m == null)
@@ -116,7 +128,15 @@ namespace MechSuitsApi.Areas.GeneralSetting.Controllers
 
             return m.First();
         }
-        
+        [HttpGet("customerOrders/{Code}")]
+        public async Task<ActionResult<IEnumerable<M_RecruitementOrder>>> GetCustomerOrder(string Code)
+        {
+            var sql = "SELECT (Select Name from RCustomer where Code = Client) as Client, OrderStatus, TimelineStatus, (Select Name from Country where Code = Country) as Country, (Select Name from professions where Code = Profession)as Profession, (select Name from Agents where Code = IDNumber) as IDNumber, Company_Code, HijriDate, Date, VisaType, VisaNumber, VisaDate, Religion, Type, Experience, Age, Appearance, MaritalSatus, CustomerTerms, Workplace, Rworkplace, ArrivalStation, Salary, ApplicationStatus, OrderPackage, ArrivalStationID, DelegateID, AgentName, Agentsource, AgencyNumber, Agencysource, Agencydate, ContractNo, DateofContract, RecruitmentFee, AdditionsalRecruitementFee, ValueAddedFee, VisaPhoto, BackingContractPhoto, AgencyPhoto, AgentIDPhoto, Notes, SMS, Status, Sort Locked, OrderNumber, ID, WorkerName, PassportNumber, PassportExpiry, ContactNumber, DelegatePhoto, PaidAmount, PaymentStatus, Sort, TotalAmount FROM RecruitementOrder Where Client = " + Code;
+            var m = _context.RecruitementOrder.FromSqlRaw(sql);
+
+            return await m.ToListAsync();
+        }
+
 
         [HttpPost, DisableRequestSizeLimit]
         [Route("upload")]
@@ -168,7 +188,7 @@ namespace MechSuitsApi.Areas.GeneralSetting.Controllers
             _context.RCustomer.Add(m);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("Getm", new { id = m.ID }, m);
+            return CreatedAtAction("Getm", new { Code = m.Code }, m);
         }
 
         [HttpPut]
@@ -185,14 +205,13 @@ namespace MechSuitsApi.Areas.GeneralSetting.Controllers
             try
             {
                 M_RCustomer obj = new M_RCustomer();
-                obj = await _context.RCustomer.FindAsync(m.ID);
+                obj = await _context.RCustomer.FindAsync(m.Code);
 
                 if (obj != null)
                 {
 
                     obj.Name = m.Name;
                     obj.RName = m.RName;
-
                     obj.AgentCode = m.AgentCode;
                     obj.ID_Number = m.ID_Number;
                     obj.mobile = m.mobile;
@@ -216,7 +235,6 @@ namespace MechSuitsApi.Areas.GeneralSetting.Controllers
                     obj.Photo_ID = m.Photo_ID;
                     obj.OtherDocument = m.OtherDocument;
                     obj.Source = m.Source;
-                    Console.WriteLine(obj.Source);
                     obj.Office_Know_how = m.Office_Know_how;
                     obj.Locked = m.Locked;
                     obj.Sort = m.Sort;
@@ -251,7 +269,7 @@ namespace MechSuitsApi.Areas.GeneralSetting.Controllers
             SqlDataReader sqldr;
             string strsql;
             string no = "";
-            strsql = @"SELECT ISNULL(MAX( CAST(CODE AS BIGINT  ))  ,1000) +1  AS code FROM RCustomer";
+            strsql = @"SELECT ISNULL( MAX( CAST(CODE AS BIGINT)),1000) +1  AS code FROM RCustomer";
             //  strsql = "select  max(  cast(code as bigint)) +1  as code from RCustomer where    Company_Code='" + Company_Code + "' ";
 
             if (con.State == ConnectionState.Closed)
@@ -273,10 +291,10 @@ namespace MechSuitsApi.Areas.GeneralSetting.Controllers
             return no;
         }
         // DELETE: api/Level2/5
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<M_RCustomer>> Deletem(Int64 id)
+        [HttpDelete("{Code}")]
+        public async Task<ActionResult<M_RCustomer>> Deletem(string Code)
         {
-            var m = await _context.RCustomer.FindAsync(id);
+            var m = await _context.RCustomer.FindAsync(Code);
             if (m == null)
             {
                 return NotFound();

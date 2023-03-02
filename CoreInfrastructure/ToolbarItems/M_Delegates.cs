@@ -6,7 +6,7 @@ namespace CoreInfrastructure.toolbarItems
     public class M_Delegates
     {
          
-        public Int64 ID { get; set; }
+        public string ID { get; set; }
         public string Company_Code { get; set; }
         public string Code { get; set; }
         public string Name { get; set; }
